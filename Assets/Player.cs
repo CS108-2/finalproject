@@ -3,9 +3,10 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+	public int turning_speed;
 	public int speed;
-	public float xvelocity;
-	public float yvelocity;
+	public float turning;
+	public float velocity;
 	public Vector2 movement;
 
 	public GameObject bullet;
@@ -18,10 +19,11 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		turning_speed = 175;
 		speed = 100;
 
-		xvelocity = 0;
-		yvelocity = 0;
+		turning = 0;
+		velocity = 0;
 
 		bullettime = 0;
 
@@ -30,19 +32,22 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		xvelocity = Input.GetAxis ("Horizontal");
-		yvelocity = Input.GetAxis ("Vertical");
+		turning = Input.GetAxis ("Horizontal");
+		velocity = Input.GetAxis ("Vertical");
 
 		bullettime += Time.deltaTime;
 
 		if (Input.GetAxis ("Fire1") > 0 && bullettime >= BULLET_DELAY) {
 			//I would argue we need a better way to store the bullet prefab, allowing upgrades and such to change this.
-			Instantiate (this.bullet, this.transform.position + new Vector3(0.5f, 0, 0), this.transform.rotation);
+			Instantiate (this.bullet, this.transform.position + transform.up * 0.5f, this.transform.rotation);
 			bullettime = 0;
 		}
 	}
 
 	void FixedUpdate() {
-		rbody.velocity = new Vector2 (xvelocity, yvelocity) * Time.deltaTime * speed;
+		if (velocity >= 0)
+			turning *= -1;
+		transform.Rotate(0.0f, 0.0f, turning * Time.deltaTime * turning_speed);
+		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
 	}
 }
