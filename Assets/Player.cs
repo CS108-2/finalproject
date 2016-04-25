@@ -38,8 +38,8 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		xvelocity = GetTurning ();//Input.GetAxis ("Horizontal");
-		yvelocity = GetVelocity ();//Input.GetAxis ("Vertical");
+		xvelocity = GetTurning ();
+		yvelocity = GetVelocity ();
 
 		bullettime += Time.deltaTime;
 
