@@ -11,9 +11,11 @@ public class Player : MonoBehaviour {
 
 	public player_type player;
 
+	public int turning_speed
+
 	public int speed;
-	public float xvelocity;
-	public float yvelocity;
+	public float turning;
+	public float velocity;
 	public Vector2 movement;
 
 	public GameObject bullet;
@@ -26,26 +28,27 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		turning_speed = 175;
 		speed = 100;
 
-		xvelocity = 0;
-		yvelocity = 0;
+		turning = 0;
+		velocity = 0;
 
 		bullettime = 0;
 
 		rbody = gameObject.GetComponent<Rigidbody2D> ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		xvelocity = GetTurning ();
-		yvelocity = GetVelocity ();
+		turning = GetTurning ();
+		velocity = GetVelocity ();
 
 		bullettime += Time.deltaTime;
 
 		if (Input.GetAxis ("Fire1") > 0 && bullettime >= BULLET_DELAY) {
 			//I would argue we need a better way to store the bullet prefab, allowing upgrades and such to change this.
-			Instantiate (this.bullet, this.transform.position + new Vector3(0.5f, 0, 0), this.transform.rotation);
+			Instantiate (this.bullet, this.transform.position + transform.up * 0.5f, this.transform.rotation);
 			bullettime = 0;
 		}
 	}
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour {
 			return Input.GetAxis ("Horizontal");
 		else if (player == player_type.player_2)
 			return Input.GetAxis ("Horizontal2");
-		// or something like this, not yet sure how we should implement AI. Maybe as a separate class? 
+		// or something like this, not yet sure how we should implement AI. Maybe as a separate class?
 //		else if (player == players.ai)
 //			return AI.GetTurning()
 		else return 0; // error
@@ -66,13 +69,16 @@ public class Player : MonoBehaviour {
 			return Input.GetAxis ("Vertical");
 		else if (player == player_type.player_2)
 			return Input.GetAxis ("Vertical2");
-		// or something like this, not yet sure how we should implement AI. Maybe as a separate class? 
+		// or something like this, not yet sure how we should implement AI. Maybe as a separate class?
 //		else if (player == players.ai)
 //			return AI.GetTurning()
 		else return 0; // error
 	}
 
 	void FixedUpdate() {
-		rbody.velocity = new Vector2 (xvelocity, yvelocity) * Time.deltaTime * speed;
+		if (velocity >= 0)
+			turning *= -1;
+		transform.Rotate(0.0f, 0.0f, turning * Time.deltaTime * turning_speed);
+		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
 	}
 }
