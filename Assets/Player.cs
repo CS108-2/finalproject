@@ -3,6 +3,14 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+	public enum player_type {
+		ai,
+		player_1,
+		player_2
+	}
+
+	public player_type player;
+
 	public int speed;
 	public float xvelocity;
 	public float yvelocity;
@@ -30,8 +38,8 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		xvelocity = Input.GetAxis ("Horizontal");
-		yvelocity = Input.GetAxis ("Vertical");
+		xvelocity = GetTurning ();//Input.GetAxis ("Horizontal");
+		yvelocity = GetVelocity ();//Input.GetAxis ("Vertical");
 
 		bullettime += Time.deltaTime;
 
@@ -40,6 +48,28 @@ public class Player : MonoBehaviour {
 			Instantiate (this.bullet, this.transform.position + new Vector3(0.5f, 0, 0), this.transform.rotation);
 			bullettime = 0;
 		}
+	}
+
+	float GetTurning() {
+		if (player == player_type.player_1)
+			return Input.GetAxis ("Horizontal");
+		else if (player == player_type.player_2)
+			return Input.GetAxis ("Horizontal2");
+		// or something like this, not yet sure how we should implement AI. Maybe as a separate class? 
+//		else if (player == players.ai)
+//			return AI.GetTurning()
+		else return 0; // error
+	}
+
+	float GetVelocity() {
+		if (player == player_type.player_1)
+			return Input.GetAxis ("Vertical");
+		else if (player == player_type.player_2)
+			return Input.GetAxis ("Vertical2");
+		// or something like this, not yet sure how we should implement AI. Maybe as a separate class? 
+//		else if (player == players.ai)
+//			return AI.GetTurning()
+		else return 0; // error
 	}
 
 	void FixedUpdate() {
