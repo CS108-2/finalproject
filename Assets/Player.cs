@@ -11,7 +11,7 @@ public class Player : MonoBehaviour {
 
 	public player_type player;
 
-	public int turning_speed
+	public int turning_speed;
 
 	public int speed;
 	public float turning;
