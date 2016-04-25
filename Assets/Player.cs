@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
 	public float turning;
 	public float velocity;
 	public Vector2 movement;
+	public int acceleration;
 
 	public GameObject bullet;
 	public float bullettime;
@@ -28,11 +29,12 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		turning_speed = 175;
+		turning_speed = 20;
 		speed = 100;
 
 		turning = 0;
 		velocity = 0;
+		acceleration = 10;
 
 		bullettime = 0;
 
@@ -41,8 +43,22 @@ public class Player : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		turning = GetTurning ();
-		velocity = GetVelocity ();
+//		float turning_input = GetTurning ();
+//		float velocity_input = GetVelocity ();
+
+		// if velocity is too high, player must slow down
+//		if (velocity > max_velocity)
+//		if (velocity > 100)
+//			velocity_input = 0;
+
+//		if (velocity_input == 0)
+//			velocity -= acceleration;
+
+//		else
+//			velocity += acceleration;
+		
+//		if (velocity > max_velocity)
+//			velocity = max_velocity;
 
 		bullettime += Time.deltaTime;
 
@@ -76,9 +92,29 @@ public class Player : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (velocity >= 0)
-			turning *= -1;
-		transform.Rotate(0.0f, 0.0f, turning * Time.deltaTime * turning_speed);
-		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
+
+		float turning_input = GetTurning ();
+		float velocity_input = GetVelocity ();
+
+		// if velocity is too high, player must slow down
+		//		if (velocity > max_velocity)
+//		if (velocity > 100)
+//			velocity_input = 0;
+
+//		if (velocity_input == 0)
+//			velocity -= acceleration;
+//			rbody.AddRelativeForce(transform.up * -acceleration);
+//		else
+//			velocity += acceleration;
+		rbody.AddForce(transform.up * velocity_input * acceleration);
+		if (rbody.velocity.sqrMagnitude > 5 * 5)
+			rbody.velocity = rbody.velocity.normalized * 5;
+
+		if (velocity_input >= 0)
+			turning_input *= -1;
+
+		rbody.AddTorque (turning_input * turning_speed * 0.01f);
+//		transform.Rotate(0.0f, 0.0f, turning_input * Time.deltaTime * turning_speed);
+//		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
 	}
 }
