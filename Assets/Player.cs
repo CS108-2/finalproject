@@ -43,23 +43,6 @@ public class Player : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-//		float turning_input = GetTurning ();
-//		float velocity_input = GetVelocity ();
-
-		// if velocity is too high, player must slow down
-//		if (velocity > max_velocity)
-//		if (velocity > 100)
-//			velocity_input = 0;
-
-//		if (velocity_input == 0)
-//			velocity -= acceleration;
-
-//		else
-//			velocity += acceleration;
-		
-//		if (velocity > max_velocity)
-//			velocity = max_velocity;
-
 		bullettime += Time.deltaTime;
 
 		if (Input.GetAxis ("Fire1") > 0 && bullettime >= BULLET_DELAY) {
@@ -92,28 +75,22 @@ public class Player : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-
 		float turning_input = GetTurning ();
 		float velocity_input = GetVelocity ();
 
-		// if velocity is too high, player must slow down
-		//		if (velocity > max_velocity)
-//		if (velocity > 100)
-//			velocity_input = 0;
-
-//		if (velocity_input == 0)
-//			velocity -= acceleration;
-//			rbody.AddRelativeForce(transform.up * -acceleration);
-//		else
-//			velocity += acceleration;
+		// add force forward / backwards
 		rbody.AddForce(transform.up * velocity_input * acceleration);
 		if (rbody.velocity.sqrMagnitude > 5 * 5)
 			rbody.velocity = rbody.velocity.normalized * 5;
 
+		// check if input needs to be reversed
 		if (velocity_input >= 0)
 			turning_input *= -1;
 
+		// add torque to turn left / right
 		rbody.AddTorque (turning_input * turning_speed * 0.01f);
+
+		// old code for reference, will remove later
 //		transform.Rotate(0.0f, 0.0f, turning_input * Time.deltaTime * turning_speed);
 //		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
 	}
