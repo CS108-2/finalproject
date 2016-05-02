@@ -16,8 +16,9 @@ public class Player : MonoBehaviour {
 	public int speed;
 	public float turning;
 	public float velocity;
-	public float MAX_VELOCITY = 100;
+	public float MAX_VELOCITY;
 	public Vector2 movement;
+	public int acceleration;
 
 	public GameObject bullet;
 	public float bullettime;
@@ -29,11 +30,13 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		turning_speed = 175;
+		turning_speed = 20;
 		speed = 100;
 
 		turning = 0;
 		velocity = 0;
+		MAX_VELOCITY = 2f;
+		acceleration = 10;
 
 		bullettime = 0;
 
@@ -42,9 +45,6 @@ public class Player : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		turning = GetTurning ();
-		velocity = GetVelocity ();
-
 		bullettime += Time.deltaTime;
 
 		if (Input.GetAxis ("Fire1") > 0 && bullettime >= BULLET_DELAY) {
@@ -77,20 +77,33 @@ public class Player : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (velocity >= 0)
-			turning *= -1;
-		transform.Rotate(0.0f, 0.0f, turning * Time.deltaTime * turning_speed);
-		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
+		float turning_input = GetTurning ();
+		float velocity_input = GetVelocity ();
+
+		// add force forward / backwards
+		rbody.AddForce(transform.up * velocity_input * acceleration);
+		if (rbody.velocity.sqrMagnitude > MAX_VELOCITY * MAX_VELOCITY)
+			rbody.velocity = rbody.velocity.normalized * MAX_VELOCITY;
+
+		// check if input needs to be reversed
+		if (velocity_input >= 0)
+			turning_input *= -1;
+
+		// add torque to turn left / right
+		rbody.AddTorque (turning_input * turning_speed * 0.01f);
 
 		if (this.hp <= 0)
 			Destroy (this.gameObject);
+		// old code for reference, will remove later
+//		transform.Rotate(0.0f, 0.0f, turning_input * Time.deltaTime * turning_speed);
+//		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
 		if(other.gameObject.tag == "damaging"){
 			int damageGiven;
-			damageGiven = (int)Mathf.Round ((Mathf.Abs(this.velocity)) * 20);
+			damageGiven = (int)Mathf.Round (rbody.velocity.magnitude / MAX_VELOCITY * 20);
 			other.gameObject.GetComponent<Player> ().hp -= damageGiven;
 		}
 	}
