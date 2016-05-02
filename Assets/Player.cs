@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Player : MonoBehaviour {
@@ -11,11 +11,12 @@ public class Player : MonoBehaviour {
 
 	public player_type player;
 
-	public int turning_speed
+	public int turning_speed;
 
 	public int speed;
 	public float turning;
 	public float velocity;
+	public float MAX_VELOCITY = 100;
 	public Vector2 movement;
 
 	public GameObject bullet;
@@ -80,5 +81,17 @@ public class Player : MonoBehaviour {
 			turning *= -1;
 		transform.Rotate(0.0f, 0.0f, turning * Time.deltaTime * turning_speed);
 		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
+
+		if (this.hp <= 0)
+			Destroy (this.gameObject);
+	}
+
+	void OnCollisionEnter2D(Collision2D other)
+	{
+		if(other.gameObject.tag == "damaging"){
+			int damageGiven;
+			damageGiven = (int)Mathf.Round ((Mathf.Abs(this.velocity)) * 20);
+			other.gameObject.GetComponent<Player> ().hp -= damageGiven;
+		}
 	}
 }
