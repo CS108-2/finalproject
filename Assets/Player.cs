@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Player : MonoBehaviour {
@@ -16,6 +16,7 @@ public class Player : MonoBehaviour {
 	public int speed;
 	public float turning;
 	public float velocity;
+	public float MAX_VELOCITY;
 	public Vector2 movement;
 	public int acceleration;
 
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour {
 
 		turning = 0;
 		velocity = 0;
+		MAX_VELOCITY = 2f;
 		acceleration = 10;
 
 		bullettime = 0;
@@ -80,8 +82,8 @@ public class Player : MonoBehaviour {
 
 		// add force forward / backwards
 		rbody.AddForce(transform.up * velocity_input * acceleration);
-		if (rbody.velocity.sqrMagnitude > 5 * 5)
-			rbody.velocity = rbody.velocity.normalized * 5;
+		if (rbody.velocity.sqrMagnitude > MAX_VELOCITY * MAX_VELOCITY)
+			rbody.velocity = rbody.velocity.normalized * MAX_VELOCITY;
 
 		// check if input needs to be reversed
 		if (velocity_input >= 0)
@@ -90,8 +92,19 @@ public class Player : MonoBehaviour {
 		// add torque to turn left / right
 		rbody.AddTorque (turning_input * turning_speed * 0.01f);
 
+		if (this.hp <= 0)
+			Destroy (this.gameObject);
 		// old code for reference, will remove later
 //		transform.Rotate(0.0f, 0.0f, turning_input * Time.deltaTime * turning_speed);
 //		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
+	}
+
+	void OnCollisionEnter2D(Collision2D other)
+	{
+		if(other.gameObject.tag == "damaging"){
+			int damageGiven;
+			damageGiven = (int)Mathf.Round (rbody.velocity.magnitude / MAX_VELOCITY * 20);
+			other.gameObject.GetComponent<Player> ().hp -= damageGiven;
+		}
 	}
 }
