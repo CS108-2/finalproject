@@ -47,11 +47,11 @@ public class Player : MonoBehaviour {
 
 		bullettime += Time.deltaTime;
 
-		if (Input.GetAxis ("Fire1") > 0 && bullettime >= BULLET_DELAY) {
-			//I would argue we need a better way to store the bullet prefab, allowing upgrades and such to change this.
-			Instantiate (this.bullet, this.transform.position + transform.up * 0.5f, this.transform.rotation);
-			bullettime = 0;
-		}
+		// if (Input.GetAxis ("Fire1") > 0 && bullettime >= BULLET_DELAY) {
+		// 	//I would argue we need a better way to store the bullet prefab, allowing upgrades and such to change this.
+		// 	Instantiate (this.bullet, this.transform.position + transform.up * 1f, this.transform.rotation);
+		// 	bullettime = 0;
+		// }
 	}
 
 	float GetTurning() {
