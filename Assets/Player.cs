@@ -30,13 +30,13 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		turning_speed = 120;
-		speed = 100;
+		turning_speed = 220;
+//		speed = 100;
 
 		turning = 0;
 		velocity = 0;
 		MAX_VELOCITY = 2f;
-		acceleration = 10;
+		acceleration = 45;
 
 		bullettime = 0;
 
