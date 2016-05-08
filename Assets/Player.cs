@@ -28,6 +28,9 @@ public class Player : MonoBehaviour {
 
 	private Rigidbody2D rbody;
 
+	private GameObject particles;
+	private ParticleSystem particle_system;
+
 	// Use this for initialization
 	void Start () {
 		turning_speed = 220;
@@ -41,6 +44,9 @@ public class Player : MonoBehaviour {
 		bullettime = 0;
 
 		rbody = gameObject.GetComponent<Rigidbody2D> ();
+
+		particles = (GameObject)GetComponentInChildren<ParticleSystem> ().gameObject;
+		particle_system = (ParticleSystem)particles.GetComponent<ParticleSystem> ();
 	}
 
 	// Update is called once per frame
@@ -84,10 +90,17 @@ public class Player : MonoBehaviour {
 		rbody.AddForce(transform.up * velocity_input * acceleration);
 		if (rbody.velocity.sqrMagnitude > MAX_VELOCITY * MAX_VELOCITY)
 			rbody.velocity = rbody.velocity.normalized * MAX_VELOCITY;
-
+		
 		// check if input needs to be reversed
 		if (velocity_input >= 0)
 			turning_input *= -1;
+
+		if (rbody.velocity.magnitude != 0)
+			particles.SetActive (true);
+		else
+			particles.SetActive (false);
+
+		particle_system.startSpeed = rbody.velocity.magnitude / MAX_VELOCITY * 20;
 
 		// add torque to turn left / right
 		rbody.AddTorque (turning_input * turning_speed * 0.01f);
