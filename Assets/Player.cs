@@ -17,7 +17,6 @@ public class Player : MonoBehaviour {
 	public float turning;
 	public float velocity;
 	public float MAX_VELOCITY;
-	public Vector2 movement;
 	public int acceleration;
 
 	public GameObject bullet;
@@ -30,6 +29,14 @@ public class Player : MonoBehaviour {
 
 	private GameObject particles;
 	private ParticleSystem particle_system;
+
+	private Camera camera;
+
+	private const int HEALTHBAR_WIDTH = 30;
+	private const int HEALTHBAR_HEIGHT = 5;
+	private const int HEALTHBAR_YOFFSET = 30;
+
+	public GUISkin healthbar_skin;
 
 	// Use this for initialization
 	void Start () {
@@ -47,6 +54,8 @@ public class Player : MonoBehaviour {
 
 		particles = (GameObject)GetComponentInChildren<ParticleSystem> ().gameObject;
 		particle_system = (ParticleSystem)particles.GetComponent<ParticleSystem> ();
+
+		camera = Camera.main;
 	}
 
 	// Update is called once per frame
@@ -110,6 +119,13 @@ public class Player : MonoBehaviour {
 		// old code for reference, will remove later
 //		transform.Rotate(0.0f, 0.0f, turning_input * Time.deltaTime * turning_speed);
 //		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
+	}
+
+	void OnGUI() {
+		GUI.skin = healthbar_skin;
+		Vector3 position = camera.WorldToScreenPoint (transform.position);
+		GUI.HorizontalScrollbar(new Rect (position.x - (HEALTHBAR_WIDTH / 2), Screen.height - position.y - HEALTHBAR_YOFFSET, HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT), 0, hp, 0, 100, "horizontalscrollbar");
+//		GUI.HorizontalScrollbar (Rect (0, 0, 0, 0), 0, 0, 0, 0);
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
