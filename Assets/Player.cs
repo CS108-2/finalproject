@@ -131,9 +131,11 @@ public class Player : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D other)
 	{
 		if(other.gameObject.tag == "damaging"){
-			int damageGiven;
-			damageGiven = (int)Mathf.Round (rbody.velocity.magnitude / MAX_VELOCITY * 20);
-			other.gameObject.GetComponent<Player> ().hp -= damageGiven;
+			int damageTaken = 0;
+			if(this.GetComponent<EdgeCollider2D>().IsTouching(other.gameObject.GetComponent<BoxCollider2D>()))
+				damageTaken = (int)Mathf.Round (other.relativeVelocity.magnitude / (2*MAX_VELOCITY) * 5);
+			other.gameObject.GetComponent<Player>().hp -= damageTaken;
+			rbody.AddForce (-(other.rigidbody.position - rbody.position) * (other.relativeVelocity.magnitude*40));
 		}
 	}
 }
