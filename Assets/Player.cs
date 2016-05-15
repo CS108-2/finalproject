@@ -28,9 +28,13 @@ public class Player : MonoBehaviour {
 
 	private Rigidbody2D rbody;
 
-	private GameObject particles;
-	private ParticleSystem particle_system;
 
+	private GameObject movement_particles;
+	private GameObject collision_particles;
+	private ParticleSystem movement_particle_system;
+	private ParticleSystem collision_particle_system;
+	public int COLLISION_PARTICLE_COUNT;
+	
 	private Camera camera;
 
 	private const int HEALTHBAR_WIDTH = 30;
@@ -53,8 +57,19 @@ public class Player : MonoBehaviour {
 
 		rbody = gameObject.GetComponent<Rigidbody2D> ();
 
-		particles = (GameObject)GetComponentInChildren<ParticleSystem> ().gameObject;
-		particle_system = (ParticleSystem)particles.GetComponent<ParticleSystem> ();
+		foreach (Transform t in transform) {
+			switch (t.name) {
+				case "movement particles":
+					movement_particles = t.gameObject;
+					break;
+				case "collision particles":
+					collision_particles = t.gameObject;
+					break;
+			}
+		}
+
+		movement_particle_system = (ParticleSystem)movement_particles.GetComponentInChildren<ParticleSystem> ();
+		collision_particle_system = (ParticleSystem)collision_particles.GetComponentInChildren<ParticleSystem> ();
 
 		camera = Camera.main;
 	}
@@ -106,11 +121,11 @@ public class Player : MonoBehaviour {
 			turning_input *= -1;
 
 		if (rbody.velocity.magnitude != 0)
-			particles.SetActive (true);
+			movement_particles.SetActive (true);
 		else
-			particles.SetActive (false);
+			movement_particles.SetActive (false);
 
-		particle_system.startSpeed = rbody.velocity.magnitude / MAX_VELOCITY * 20;
+		movement_particle_system.startSpeed = rbody.velocity.magnitude / MAX_VELOCITY * 20;
 
 		// add torque to turn left / right
 		rbody.AddTorque (turning_input * turning_speed * 0.01f);
@@ -134,6 +149,7 @@ public class Player : MonoBehaviour {
 		if(other.gameObject.tag == "damaging"){
 			int damageTaken = 0;
 			if (this.GetComponent<EdgeCollider2D> ().IsTouching (other.gameObject.GetComponent<BoxCollider2D> ())) {
+				collision_particle_system.Emit (COLLISION_PARTICLE_COUNT);
 				Player player = other.gameObject.GetComponent<Player> ();
 				if (player && !player.shield) {
 					damageTaken = (int)Mathf.Round (other.relativeVelocity.magnitude / (2 * MAX_VELOCITY) * 5);
