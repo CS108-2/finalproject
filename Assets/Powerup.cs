@@ -14,7 +14,6 @@ public class Powerup : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		Debug.Log (other.gameObject.name);
 		Player player = other.GetComponent<Player> ();
 		if (player) {
 			this.AddPowerup (player);
