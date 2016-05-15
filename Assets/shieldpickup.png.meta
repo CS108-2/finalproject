@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 746ec511ee65046f2b50c888bd0eb0a0
-timeCreated: 1463287467
+guid: 118d71e0ab6134446a418b492661cda4
+timeCreated: 1463287961
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: player2_0
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -31,7 +30,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -39,7 +38,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -50,22 +49,7 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: player2_0
-      rect:
-        serializedVersion: 2
-        x: 76
-        y: 28
-        width: 79
-        height: 107
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -39.5, y: 53.5}
-        - {x: -39.5, y: -53.5}
-        - {x: 39.5, y: -53.5}
-        - {x: 39.5, y: 53.5}
+    sprites: []
     outline: []
   spritePackingTag: 
   userData: 

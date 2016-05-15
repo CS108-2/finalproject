@@ -24,7 +24,7 @@ public class PowerupSpawner : MonoBehaviour {
 
 		if (time_since_last_spawn >= spawn_time) {
 			time_since_last_spawn = 0;
-			current_powerup = (GameObject) Instantiate(powerups[Random.Range(0, powerups.Length - 1)], this.transform.position, this.transform.rotation);
+			current_powerup = (GameObject) Instantiate(powerups[Random.Range(0, powerups.Length)], this.transform.position, this.transform.rotation);
 		}
 	}
 }

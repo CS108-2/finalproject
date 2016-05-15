@@ -24,6 +24,7 @@ public class Player : MonoBehaviour {
 	public const float BULLET_DELAY = 0.1f;
 
 	public int hp = 100;
+	public bool shield = false;
 
 	private Rigidbody2D rbody;
 
@@ -132,8 +133,12 @@ public class Player : MonoBehaviour {
 	{
 		if(other.gameObject.tag == "damaging"){
 			int damageTaken = 0;
-			if(this.GetComponent<EdgeCollider2D>().IsTouching(other.gameObject.GetComponent<BoxCollider2D>()))
-				damageTaken = (int)Mathf.Round (other.relativeVelocity.magnitude / (2*MAX_VELOCITY) * 5);
+			if (this.GetComponent<EdgeCollider2D> ().IsTouching (other.gameObject.GetComponent<BoxCollider2D> ())) {
+				Player player = other.gameObject.GetComponent<Player> ();
+				if (player && !player.shield) {
+					damageTaken = (int)Mathf.Round (other.relativeVelocity.magnitude / (2 * MAX_VELOCITY) * 5);
+				}
+			}
 			other.gameObject.GetComponent<Player>().hp -= damageTaken;
 			rbody.AddForce (-(other.rigidbody.position - rbody.position) * (other.relativeVelocity.magnitude*40));
 		}
