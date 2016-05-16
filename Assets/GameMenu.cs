@@ -9,11 +9,17 @@ public class GameMenu : MonoBehaviour {
 	public Text victory_text;
 
 	private GameObject victory_menu;
+	private GameObject pause_menu;
+	private GameObject controls_menu;
 
 	// Use this for initialization
 	void Start () {
 		victory_menu = GameObject.Find ("Victory Menu");
+		pause_menu = GameObject.Find ("Pause Menu");
+		controls_menu = GameObject.Find ("Controls Menu");
 		victory_menu.SetActive (false);
+		pause_menu.SetActive (false);
+		controls_menu.SetActive (false);
 	}
 
 	void Update() {
@@ -29,6 +35,11 @@ public class GameMenu : MonoBehaviour {
 			victory_text.text = "Player 2 wins!";
 			victory_menu.SetActive (true);
 		}
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			Time.timeScale = 0;
+			pause_menu.SetActive (true);
+		}
 	}
 
 	public void PlayAgain() {
@@ -36,6 +47,7 @@ public class GameMenu : MonoBehaviour {
 	}
 
 	public void ToMenu() {
+		Time.timeScale = 1;
 		SceneManager.LoadScene ("mainmenu");
 	}
 
@@ -45,5 +57,20 @@ public class GameMenu : MonoBehaviour {
 
 	public void CloseVictoryMenu() {
 		victory_menu.SetActive (false);
+	}
+
+	public void ShowPauseMenu() {
+		pause_menu.SetActive (true);
+		controls_menu.SetActive (false);
+	}
+
+	public void ShowControlsMenu() {
+		controls_menu.SetActive (true);
+		pause_menu.SetActive (false);
+	}
+
+	public void Resume() {
+		pause_menu.SetActive (false);
+		Time.timeScale = 1;
 	}
 }
