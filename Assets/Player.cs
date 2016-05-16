@@ -155,12 +155,6 @@ public class Player : MonoBehaviour {
 					damageTaken = (int)Mathf.Round (other.relativeVelocity.magnitude / (2 * MAX_VELOCITY) * 5);
 				}
 			}
-		}
-		else if (other.gameObject.tag == "obstacle") {
-			int damageTaken = 0;
-			damageTaken = (int)Mathf.Round ((rbody.velocity.magnitude / (2*MAX_VELOCITY))* 3);
-			hp -= damageTaken;
-		}
 			other.gameObject.GetComponent<Player>().hp -= damageTaken;
 			rbody.AddForce (-(other.rigidbody.position - rbody.position) * (other.relativeVelocity.magnitude*40));
 		}
