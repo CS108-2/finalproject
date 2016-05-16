@@ -146,8 +146,6 @@ public class Player : MonoBehaviour {
 		if (hp <= 100)
 			damage_mult = .5f + (hp / 100f * .5f);
 
-		Debug.Log (damage_mult);
-
 		// add force forward / backwards
 		rbody.AddForce(transform.up * velocity_input * acceleration);
 		if (rbody.velocity.sqrMagnitude > MAX_VELOCITY * MAX_VELOCITY)
