@@ -22,7 +22,7 @@ public class PlaySound : MonoBehaviour {
 				source.PlayOneShot (ShieldHit, 1F);
 			else
 				source.PlayOneShot (DerbyCrash, 1F);
-			if (other.gameObject.GetComponent<Player> ().hp <= 0)
+			if (this.gameObject.GetComponent<Player> ().hp <= 0)
 				source.PlayOneShot (CarExplode, 1F);
 		}
 		else if (other.gameObject.tag == "obstacle")
