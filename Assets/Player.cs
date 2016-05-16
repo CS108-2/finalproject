@@ -132,17 +132,26 @@ public class Player : MonoBehaviour {
 		if (boost >= MAX_BOOST)
 			boost = MAX_BOOST;
 
-		int boost_mult = 1;
+		// define boost multiplier
+		float boost_mult = 1f;
 
 		if (boost >= 0 && boost_input > 0) {
 			boost -= 40 * Time.deltaTime;
-			boost_mult = 2;
+			boost_mult = 2f;
 		}
+
+		// define damage multiplier
+		float damage_mult = 1f;
+
+		if (hp <= 100)
+			damage_mult = .5f + (hp / 100f * .5f);
+
+		Debug.Log (damage_mult);
 
 		// add force forward / backwards
 		rbody.AddForce(transform.up * velocity_input * acceleration);
 		if (rbody.velocity.sqrMagnitude > MAX_VELOCITY * MAX_VELOCITY)
-			rbody.velocity = rbody.velocity.normalized * MAX_VELOCITY * boost_mult;
+			rbody.velocity = rbody.velocity.normalized * MAX_VELOCITY * boost_mult * damage_mult;
 		
 		// check if input needs to be reversed
 		if (velocity_input >= 0)
