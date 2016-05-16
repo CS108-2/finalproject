@@ -3,6 +3,7 @@ using System.Collections;
 
 public class HealthPickup : Powerup {
 
+	public AudioClip HealthUp;
 	public int health;
 
 	// Use this for initialization
@@ -17,6 +18,7 @@ public class HealthPickup : Powerup {
 
 	// to be overridden by subclasses
 	override protected void AddPowerup(Player player) {
+		player.gameObject.GetComponent<AudioSource> ().PlayOneShot (HealthUp, 1F);
 		player.hp += health;
 	}
 }
