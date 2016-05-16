@@ -26,6 +26,9 @@ public class Player : MonoBehaviour {
 	public int hp = 100;
 	public bool shield = false;
 
+	public const float MAX_BOOST = 100f;
+	public float boost = MAX_BOOST;
+
 	private Rigidbody2D rbody;
 
 
@@ -42,6 +45,7 @@ public class Player : MonoBehaviour {
 	private const int HEALTHBAR_YOFFSET = 30;
 
 	public GUISkin healthbar_skin;
+	public GUISkin boostbar_skin;
 
 	// Use this for initialization
 	void Start () {
@@ -103,18 +107,42 @@ public class Player : MonoBehaviour {
 			return Input.GetAxis ("Vertical2");
 		// or something like this, not yet sure how we should implement AI. Maybe as a separate class?
 //		else if (player == players.ai)
-//			return AI.GetTurning()
+//			return AI.GetVelocity()
+		else return 0; // error
+	}
+
+	float GetBoost() {
+		if (player == player_type.player_1)
+			return Input.GetAxis ("Boost");
+		if (player == player_type.player_2)
+			return Input.GetAxis ("Boost2");
+		// or something like this, not yet sure how we should implement AI. Maybe as a separate class?
+//		else if (player == players.ai)
+//			return AI.GetBoost()
 		else return 0; // error
 	}
 
 	void FixedUpdate() {
 		float turning_input = GetTurning ();
 		float velocity_input = GetVelocity ();
+		float boost_input = GetBoost ();
+
+		// increase boost meter
+		boost += 10 * Time.deltaTime;
+		if (boost >= MAX_BOOST)
+			boost = MAX_BOOST;
+
+		int boost_mult = 1;
+
+		if (boost >= 0 && boost_input > 0) {
+			boost -= 40 * Time.deltaTime;
+			boost_mult = 2;
+		}
 
 		// add force forward / backwards
 		rbody.AddForce(transform.up * velocity_input * acceleration);
 		if (rbody.velocity.sqrMagnitude > MAX_VELOCITY * MAX_VELOCITY)
-			rbody.velocity = rbody.velocity.normalized * MAX_VELOCITY;
+			rbody.velocity = rbody.velocity.normalized * MAX_VELOCITY * boost_mult;
 		
 		// check if input needs to be reversed
 		if (velocity_input >= 0)
@@ -138,10 +166,15 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnGUI() {
+		// health bar
 		GUI.skin = healthbar_skin;
-		Vector3 position = camera.WorldToScreenPoint (transform.position);
-		GUI.HorizontalScrollbar(new Rect (position.x - (HEALTHBAR_WIDTH / 2), Screen.height - position.y - HEALTHBAR_YOFFSET, HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT), 0, hp, 0, 100, "horizontalscrollbar");
-//		GUI.HorizontalScrollbar (Rect (0, 0, 0, 0), 0, 0, 0, 0);
+		Vector3 healthbar_position = camera.WorldToScreenPoint (transform.position);
+		GUI.HorizontalScrollbar(new Rect (healthbar_position.x - (HEALTHBAR_WIDTH / 2), Screen.height - healthbar_position.y - HEALTHBAR_YOFFSET, HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT), 0, hp, 0, 100, "horizontalscrollbar");
+
+		// boost bar
+		GUI.skin = boostbar_skin;
+		Vector3 boostbar_position = camera.WorldToScreenPoint (transform.position);
+		GUI.HorizontalScrollbar(new Rect (boostbar_position.x - (HEALTHBAR_WIDTH / 2), Screen.height - boostbar_position.y - HEALTHBAR_YOFFSET + HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT), 0, boost, 0, 100, "horizontalscrollbar");
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
