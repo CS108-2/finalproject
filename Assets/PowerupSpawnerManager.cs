@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class PowerupSpawnerManager : MonoBehaviour {
 
 	public GameObject[] powerup_spawners;
-	public float spawn_time;
+	public float spawn_time = 10;
 	public float time_since_last_spawn;
 
 	// Use this for initialization
