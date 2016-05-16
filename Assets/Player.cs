@@ -131,7 +131,7 @@ public class Player : MonoBehaviour {
 		rbody.AddTorque (turning_input * turning_speed * 0.01f);
 
 		if (this.hp <= 0)
-			Destroy (this.gameObject);
+			gameObject.SetActive (false);
 		// old code for reference, will remove later
 //		transform.Rotate(0.0f, 0.0f, turning_input * Time.deltaTime * turning_speed);
 //		rbody.velocity = this.transform.up * velocity * Time.deltaTime * speed;
